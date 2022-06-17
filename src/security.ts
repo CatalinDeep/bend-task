@@ -25,9 +25,9 @@ export function isValidToken(token: string): boolean {
 
 // NOTE(roman): assuming that `isValidToken` will be called before
 export function extraDataFromToken(token: string): TokenData {
-  const decoded = jwt.verify(token, 'SECRET_KEY').toString();
+  const decoded = jwt.verify(token, 'SECRET_KEY');
 
-  const tokenData: TokenData = { id: (JSON.parse(decoded) as TokenData).id };
+  const tokenData: TokenData = { id: (decoded as TokenData).id };
   return tokenData;
 }
 
