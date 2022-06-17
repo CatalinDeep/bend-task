@@ -21,7 +21,9 @@ export function initUsersRouter(sequelizeClient: SequelizeClient): Router {
 
   router
     .route('/')
-    .get(tokenValidation, initListUsersRequestHandler(sequelizeClient))
+    .get(tokenValidation, initListUsersRequestHandler(sequelizeClient));
+  router
+    .route('/create')
     .post(
       tokenValidation,
       adminValidation,
