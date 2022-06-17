@@ -1,18 +1,29 @@
 import { Sequelize, Options } from 'sequelize';
 
-import type { UsersModel } from './repositories/types';
+import type { PostsModel, UsersModel } from './repositories/types';
 
-import { setupUsersModel } from './models';
+import { setupUsersModel, setupPostsModel } from './models';
 
 const postsModelName = 'posts';
 const usersModelName = 'users';
 
-export async function initSequelizeClient(params: SetupSequelizeParams): Promise<SequelizeClient> {
+export async function initSequelizeClient(
+  params: SetupSequelizeParams
+): Promise<SequelizeClient> {
   const { dialect, host, port, username, password, database } = params;
 
-  const sequelizeClient = new Sequelize({ dialect, host, port, username, password, database, logging: false });
+  const sequelizeClient = new Sequelize({
+    dialect,
+    host,
+    port,
+    username,
+    password,
+    database,
+    logging: false,
+  });
 
   setupUsersModel(usersModelName, sequelizeClient);
+  setupPostsModel(postsModelName, sequelizeClient);
 
   associateModels(sequelizeClient.models as unknown as SequelizeModels);
 
@@ -23,17 +34,23 @@ export async function initSequelizeClient(params: SetupSequelizeParams): Promise
 }
 
 function associateModels(models: SequelizeModels): void {
-  for (const model of Object.values((models))) {
-    const associate = (model as ModelWithPossibleAssociations).associate?.bind(model);
+  for (const model of Object.values(models)) {
+    const associate = (model as ModelWithPossibleAssociations).associate?.bind(
+      model
+    );
     if (associate) {
       associate(models);
     }
   }
 }
 
-type SetupSequelizeParams = Pick<Options, 'dialect' | 'host' | 'port' | 'username' | 'password' | 'database'>;
+type SetupSequelizeParams = Pick<
+  Options,
+  'dialect' | 'host' | 'port' | 'username' | 'password' | 'database'
+>;
 
 export interface SequelizeModels {
+  [postsModelName]: PostsModel;
   [usersModelName]: UsersModel;
 }
 
