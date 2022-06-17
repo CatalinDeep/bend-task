@@ -1,24 +1,34 @@
-import { NotImplementedError } from "./errors";
-
+import jwt from 'jsonwebtoken';
+import crypto from 'crypto-js';
 // TODO(roman): implement these
 // external libraries can be used
 // you can even ignore them and use your own preferred method
 
 export function hashPassword(password: string): string {
-  throw new NotImplementedError('PASSWORD_HASHING_NOT_IMPLEMENTED_YET');
+  const hashedPassword = crypto.SHA256(password).toString();
+  return hashedPassword;
 }
 
 export function generateToken(data: TokenData): string {
-  throw new NotImplementedError('TOKEN_GENERATION_NOT_IMPLEMENTED_YET');
+  const token: string = jwt.sign(data, 'SECRET_KEY');
+  return token;
 }
 
 export function isValidToken(token: string): boolean {
-  throw new NotImplementedError('TOKEN_VALIDATION_NOT_IMPLEMENTED_YET');
+  try {
+    jwt.verify(token, 'SECRET_KEY').toString();
+  } catch (err) {
+    return false;
+  }
+  return true;
 }
 
 // NOTE(roman): assuming that `isValidToken` will be called before
 export function extraDataFromToken(token: string): TokenData {
-  throw new NotImplementedError('TOKEN_EXTRACTION_NOT_IMPLEMENTED_YET');
+  const decoded = jwt.verify(token, 'SECRET_KEY').toString();
+
+  const tokenData: TokenData = { id: (JSON.parse(decoded) as TokenData).id };
+  return tokenData;
 }
 
 export interface TokenData {
