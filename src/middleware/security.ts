@@ -3,12 +3,18 @@ import { RequestHandler } from 'express';
 import type { SequelizeClient } from '../sequelize';
 import type { User } from '../repositories/types';
 
-import { UnauthorizedError, ForbiddenError, NotImplementedError } from '../errors';
+import { UnauthorizedError, ForbiddenError } from '../errors';
 import { isValidToken, extraDataFromToken } from '../security';
 import { UserType } from '../constants';
 
-export function initTokenValidationRequestHandler(sequelizeClient: SequelizeClient): RequestHandler {
-  return async function tokenValidationRequestHandler(req, res, next): Promise<void> {
+export function initTokenValidationRequestHandler(
+  sequelizeClient: SequelizeClient
+): RequestHandler {
+  return async function tokenValidationRequestHandler(
+    req,
+    res,
+    next
+  ): Promise<void> {
     try {
       const { models } = sequelizeClient;
 
@@ -53,7 +59,18 @@ export function initTokenValidationRequestHandler(sequelizeClient: SequelizeClie
 // NOTE(roman): assuming that `tokenValidationRequestHandler` is placed before
 export function initAdminValidationRequestHandler(): RequestHandler {
   return function adminValidationRequestHandler(req, res, next): void {
-    throw new NotImplementedError('ADMIN_VALIDATION_NOT_IMPLEMENTED_YET');
+    try {
+      const {
+        auth: {
+          user: { type: userType },
+        },
+      } = req as unknown as { auth: RequestAuth };
+      return userType === UserType.ADMIN
+        ? next()
+        : next(new ForbiddenError('FORBIDDEN'));
+    } catch (err) {
+      next(err);
+    }
   };
 }
 
