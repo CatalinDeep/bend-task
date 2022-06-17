@@ -1,8 +1,10 @@
 import express from 'express';
-
 import { initSequelizeClient } from './sequelize';
 import { initUsersRouter } from './routers';
-import { initErrorRequestHandler, initNotFoundRequestHandler } from './middleware';
+import {
+  initErrorRequestHandler,
+  initNotFoundRequestHandler,
+} from './middleware';
 
 const PORT = 8080;
 
@@ -16,8 +18,8 @@ async function main(): Promise<void> {
     host: 'localhost',
     port: 5432,
     username: 'postgres',
-    password: 'postgres',
-    database: 'bend-backend-task',
+    password: '12345',
+    database: 'postgres',
   });
 
   app.use(express.json());
@@ -37,4 +39,6 @@ async function main(): Promise<void> {
   });
 }
 
-main().then(() => console.info('app started')).catch(console.error);
+main()
+  .then(() => console.info('app started'))
+  .catch(console.error);
