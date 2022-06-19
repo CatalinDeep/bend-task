@@ -24,7 +24,11 @@ export function initPostsRouter(sequelizeClient: SequelizeClient): Router {
     .get(tokenValidation, initListPostsRequestHandler(sequelizeClient));
   router
     .route('/add')
-    .post(tokenValidation, initAddPostRequestHandler(sequelizeClient));
+    .post(
+      tokenValidation,
+      initValidationAddPostRequestHandler(),
+      initAddPostRequestHandler(sequelizeClient)
+    );
   router
     .route('/delete')
     .post(tokenValidation, initDeletePostRequestHandler(sequelizeClient));
@@ -133,6 +137,29 @@ function initDeletePostRequestHandler(
     } catch (err) {
       console.log(err);
       next(err);
+    }
+  };
+}
+function initValidationAddPostRequestHandler(): RequestHandler {
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises
+  return function validationAddPostRequestHandler(req, res, next): void {
+    try {
+      const { content, title } = req.body as AddPostData;
+      const titleRegex = /[^A-Za-z0-9]+/;
+      if (titleRegex.test(title) || title.length > 20) {
+        throw new BadRequestError(
+          'The post title must contain only letters and numbers with a maximum length of 20'
+        );
+      }
+      if (content.length > 100) {
+        throw new BadRequestError(
+          'The post content must contain maximum length of 20'
+        );
+      }
+
+      return next();
+    } catch (err) {
+      return next(err);
     }
   };
 }
