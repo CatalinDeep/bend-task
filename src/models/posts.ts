@@ -14,12 +14,10 @@ export function setupPostsModel(modelName: string, sequelize: Sequelize): void {
       title: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true,
       },
       content: {
         type: DataTypes.TEXT,
         allowNull: false,
-        unique: true,
       },
       isHidden: {
         type: DataTypes.BOOLEAN,
@@ -38,6 +36,11 @@ export function setupPostsModel(modelName: string, sequelize: Sequelize): void {
         field: 'updated_at',
         allowNull: false,
         defaultValue: DataTypes.NOW,
+      },
+      authorId: {
+        type: DataTypes.INTEGER,
+        field: 'authorId',
+        allowNull: false,
       },
     },
     {

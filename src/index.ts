@@ -1,6 +1,6 @@
 import express from 'express';
 import { initSequelizeClient } from './sequelize';
-import { initUsersRouter } from './routers';
+import { initUsersRouter, initPostsRouter } from './routers';
 import {
   initErrorRequestHandler,
   initNotFoundRequestHandler,
@@ -19,12 +19,13 @@ async function main(): Promise<void> {
     port: 5432,
     username: 'postgres',
     password: '12345',
-    database: 'postgres',
+    database: 'postgres2',
   });
 
   app.use(express.json());
 
   app.use('/api/v1/users', initUsersRouter(sequelizeClient));
+  app.use('/api/v1/posts', initPostsRouter(sequelizeClient));
 
   app.use('/', initNotFoundRequestHandler());
 

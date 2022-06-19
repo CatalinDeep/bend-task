@@ -41,6 +41,7 @@ export function initUsersRouter(sequelizeClient: SequelizeClient): Router {
 function initListUsersRequestHandler(
   sequelizeClient: SequelizeClient
 ): RequestHandler {
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises
   return async function listUsersRequestHandler(req, res, next): Promise<void> {
     const { models } = sequelizeClient;
 
@@ -71,6 +72,7 @@ function initListUsersRequestHandler(
 function initCreateUserRequestHandler(
   sequelizeClient: SequelizeClient
 ): RequestHandler {
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises
   return async function createUserRequestHandler(
     req,
     res,
@@ -92,6 +94,7 @@ function initCreateUserRequestHandler(
 function initLoginUserRequestHandler(
   sequelizeClient: SequelizeClient
 ): RequestHandler {
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises
   return async function loginUserRequestHandler(req, res, next): Promise<void> {
     const { models } = sequelizeClient;
 
@@ -127,6 +130,7 @@ function initLoginUserRequestHandler(
 function initRegisterUserRequestHandler(
   sequelizeClient: SequelizeClient
 ): RequestHandler {
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises
   return async function createUserRequestHandler(
     req,
     res,
