@@ -5,7 +5,9 @@ import {
   initErrorRequestHandler,
   initNotFoundRequestHandler,
 } from './middleware';
-
+import dotenv from 'dotenv';
+import { Dialect } from 'sequelize/dist';
+const config = dotenv.config().parsed;
 const PORT = 8080;
 
 async function main(): Promise<void> {
@@ -14,12 +16,12 @@ async function main(): Promise<void> {
   // TODO(roman): store these credentials in some external configs
   // so that they don't end up in the git repo
   const sequelizeClient = await initSequelizeClient({
-    dialect: 'postgres',
-    host: 'localhost',
-    port: 5432,
-    username: 'postgres',
-    password: '12345',
-    database: 'postgres2',
+    dialect: config?.DIALECT as Dialect,
+    host: config?.HOST,
+    port: Number(config?.PORT),
+    username: config?.USERNAME,
+    password: config?.PASSWORD,
+    database: config?.DATABASE,
   });
 
   app.use(express.json());
