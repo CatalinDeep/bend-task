@@ -146,6 +146,12 @@ function initValidationAddPostRequestHandler(): RequestHandler {
     try {
       const { content, title } = req.body as AddPostData;
       const titleRegex = /[^A-Za-z0-9]+/;
+      if (!title) {
+        throw new BadRequestError('Missing title');
+      }
+      if (!content) {
+        throw new BadRequestError('Missing content');
+      }
       if (titleRegex.test(title) || title.length > 20) {
         throw new BadRequestError(
           'The post title must contain only letters and numbers with a maximum length of 20'
@@ -153,7 +159,7 @@ function initValidationAddPostRequestHandler(): RequestHandler {
       }
       if (content.length > 100) {
         throw new BadRequestError(
-          'The post content must contain maximum length of 20'
+          'The post content must contain maximum length of 100'
         );
       }
 
